@@ -7,7 +7,6 @@ import com.sbs.apple.report.Report;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -25,7 +24,7 @@ import static lombok.AccessLevel.PUBLIC;
 @NoArgsConstructor(access = PUBLIC)
 @SuperBuilder
 @ToString(callSuper = true)
-@Where(clause = "USER_STOP is FALSE")
+//@Where(clause = "USER_STOP is FALSE")
 public class SiteUser extends Base {
     private boolean userStop;
     private String filename;
