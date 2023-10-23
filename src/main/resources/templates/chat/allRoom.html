@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/common/layout}">
+        <meta charset="UTF-8">
+        <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container my-3">
+
+
+        <div> 내 채팅방 목록들</div>
+
+        <div> 내가 초대한 채팅방</div>
+        <div class="flex" th:each="room2 : ${chatRoom2}">
+               <div th:text="${room2.siteUser2.nickname}+'님과 채팅방'">
+
+               </div>
+            <div>
+                <form method="get" th:action="@{|/chat/${room2.id}/room3?userId2=${room2.siteUser2.id}|}">
+                <input type="hidden" name="userId2" th:value="${room2.siteUser2.id}">
+                <button type="submit" >채팅방 입장</button>
+                </form>
+              </div>
+        </div>
+
+
+        <div> 내가 초대받은 채팅방</div>
+        <div class="flex"   th:each="room3 : ${chatRoom3}">
+               <div th:text="${room3.siteUser.nickname}+'님과 채팅방'">
+
+               </div>
+            <div>
+                <form method="get" th:action="@{|/chat/${room3.id}/room2?userId=${room3.siteUser2.id}|}">
+                <input type="hidden" name="userId" th:value="${room3.siteUser.id}">
+                <button type="submit" >채팅방 입장 </button>
+                 </form>
+             </div>
+        </div>
+
+
+
+</div>
+</body>
+</html>
+
+

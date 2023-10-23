@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/common/layout}" lang="en">
+<head >
+    <meta charset="UTF-8">
+    <title>마이 페이지</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container my-3">
+
+<ul>
+    <li><a href="/user/passwordChange">비밀번호 변경</a></li>
+    <li><a href="/user/profile_modify">프로필 수정</a></li>
+    <li><a href="/user/desired_modify">나의 이상형 정보 수정</a></li>
+    <li><a href="/user/delete">회원 탈퇴</a></li>
+    <li><a th:href="@{/chat/allRoom}">내 채팅방</a></li>
+</ul>
+
+
+
+<div>
+    <h2>사이버머니 정보:</h2>
+    <p>보유 중인 사이버머니: <span th:text="${userCyberMoney}"></span></p>
+
+    <p>다른 사용자로부터 받은 사이버머니: <span th:text="${receivedCyberMoney}"></span></p>
+
+</div>
+
+</div>
+</body>
+</html>

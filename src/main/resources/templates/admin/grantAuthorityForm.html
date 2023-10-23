@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container w-96 mt-28">
+    <h1 class="text-3xl text-center">관리자 권한 부여</h1>
+    <!-- 관리자 권한 부여 폼 -->
+    <form th:action="@{/user/grantAuthorityToAdmin}" method="post">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">관리자 권한 보안 코드 :</span>
+            </label>
+            <input type="password" name="adminCode"  class="input input-bordered" autofocus maxlength="30">
+        </div>
+
+        <button type="submit" class="border-2 border-gray-400 ml-24 mt-12 hover:bg-gray-400 p-2 rounded-lg hover:text-white">관리자 권한 부여</button>
+    </form>
+</div>
+</body>
+</html>

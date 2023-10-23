@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section>
+    <div>
+        <h2>구매할 머니 선택:</h2>
+        <input type="radio" name="payment-option" id="payment-option-1" value="5000" onclick="showPaymentPage(5000)">
+        <label for="payment-option-1">사이버 머니 5,000원</label>
+    </div>
+    <div>
+        <input type="radio" name="payment-option" id="payment-option-2" value="10000" onclick="showPaymentPage(10000)">
+        <label for="payment-option-2">사이버 머니 10,000원</label>
+    </div>
+    <div>
+        <input type="radio" name="payment-option" id="payment-option-3" value="30000" onclick="showPaymentPage(30000)">
+        <label for="payment-option-3">사이버 머니 30,000원</label>
+    </div>
+    <div>
+        <input type="radio" name="payment-option" id="payment-option-4" value="50000" onclick="showPaymentPage(50000)">
+        <label for="payment-option-4">사이버 머니 50,000원</label>
+    </div>
+</section>
+
+<div id="payment-page">
+    <p id="selected-amount">결제하실 금액: <span id="amount-label"></span></p>
+    <h2>결제 유형</h2>
+    <div>
+        <title>구매하기</title>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <link rel="stylesheet" href="./bulma.min.css">
+        <script src="https://js.tosspayments.com/v1"></script>
+    </div>
+
+    <section class="section_box ">
+        <div class="pay_container">
+            <button class="card_button" id="card-button" onclick="pay('카드', jsons.card);">카드결제</button>
+            <button class="transfer_button" id="transfer-button" onclick="pay('계좌이체', jsons.transfer);">계좌이체</button>
+            <button class="phone_button" id="phone-button" onclick="pay('휴대폰', jsons.phone);">휴대폰</button>
+            <button class="certificate_button" id="certificate-button" onclick="pay('문화상품권', jsons.certificate);">문화상품권</button>
+        </div>
+    </section>
+</div>
+
+<button onclick="goBack()">뒤로가기</button>
+
+<script>
+    let selectedAmount = null;
+
+    function showPaymentPage(amount) {
+        selectedAmount = amount;
+        document.getElementById('selected-amount').style.display = 'block';
+        document.getElementById('amount-label').textContent = selectedAmount + '원';
+        document.getElementById('payment-page').style.display = 'block';
+    }
+
+    function closePaymentPage() {
+        selectedAmount = null;
+        document.getElementById('selected-amount').style.display = 'none';
+        document.getElementById('amount-label').textContent = '';
+        document.getElementById('payment-page').style.display = 'none';
+    }
+
+    function goBack() {
+        window.history.back();  // 뒤로가기
+    }
+
+    let tossPayments = TossPayments("test_ck_KNbdOvk5rk4bBlO4DPv8n07xlzmj");
+
+    function pay(method, requestJson) {
+        if (selectedAmount !== null) {
+            requestJson.amount = selectedAmount;
+            console.log(requestJson);
+            tossPayments.requestPayment(method, requestJson)
+                .catch(function (error) {
+                    if (error.code === "USER_CANCEL") {
+                        alert('결제를 취소했습니다.');
+                    } else {
+                        alert(error.message);
+                    }
+                });
+        } else {
+            alert('결제 금액을 선택해주세요.');
+        }
+    }
+
+    let path = "/";
+    let successUrl = window.location.origin + path + "success";
+    let failUrl = window.location.origin + path + "fail";
+    let callbackUrl = window.location.origin + path + "va_callback";
+    let orderId = new Date().getTime();
+
+    let jsons = {
+        "card": {
+            "orderId": "sample-" + orderId,
+            "orderName": "사이버 머니",
+            "successUrl": successUrl,
+            "failUrl": failUrl,
+            "customerName": "사과"
+        },
+        "transfer": {
+            "orderId": "sample-" + orderId,
+            "orderName": "사이버 머니",
+            "successUrl": successUrl,
+            "failUrl": failUrl,
+            "customerName": "사과"
+        },
+        "phone": {
+            "orderId": "sample-" + orderId,
+            "orderName": "사이버 머니",
+            "successUrl": successUrl,
+            "failUrl": failUrl
+        },
+        "certificate": {
+            "orderId": "sample-" + orderId,
+            "orderName": "사이버 머니",
+            "successUrl": successUrl,
+            "failUrl": failUrl
+        }
+    }
+</script>
+</body>
+</html>

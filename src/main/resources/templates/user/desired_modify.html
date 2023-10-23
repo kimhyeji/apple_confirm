@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content" class="container my-3">
+    <div>
+        <h4>이상형 설정</h4>
+    </div>
+        <form th:action="@{/user/desired_modify}" th:object="${userDesiredForm}" method="post">
+        <div class="mb-3">
+            <label for="desired_age" class="form-label">원하는 나이</label>
+            <select th:field="*{desired_age}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="20~22">20~22</option>
+                <option value="23~25">23~25</option>
+                <option value="26~28">26~28</option>
+                <option value="29~31">29~31</option>
+                <option value="32~35">32~35</option>
+                <option value="36~38">36~38</option>
+                <option value="39~44">39~44</option>
+                <option value="45~49">45~49</option>
+                <option value="50이상">50이상</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="desired_living" class="form-label">원하는 지역</label>
+            <select th:field="*{desired_living}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="서울">서울</option>
+                <option value="인천">인천</option>
+                <option value="경기">경기</option>
+                <option value="대전">대전</option>
+                <option value="대구">대구</option>
+                <option value="부산">부산</option>
+                <option value="강원">강원</option>
+                <option value="광주">광주</option>
+                <option value="울산">울산</option>
+                <option value="경남">경남</option>
+                <option value="경북">경북</option>
+                <option value="전남">전남</option>
+                <option value="전북">전북</option>
+                <option value="제주">제주</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="desired_hobby" class="form-label">이상형 취미</label>
+            <input type="text" th:field="*{desired_hobby}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="desired_tall" class="form-label">원하는 키</label>
+            <select th:field="*{desired_tall}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="160cm이하">160cm이하</option>
+                <option value="161cm~165cm">161cm~165cm</option>
+                <option value="166cm~170cm">166cm~170cm</option>
+                <option value="171cm~175cm">171cm~175cm</option>
+                <option value="176cm~180cm">176cm~180cm</option>
+                <option value="181cm~185cm">181cm~185cm</option>
+                <option value="186cm~190cm">186cm~190cm</option>
+                <option value="191cm이상">191cm이상</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="desired_body_type" class="form-label">원하는 체형</label>
+            <select th:field="*{desired_body_type}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="슬림한">슬림한</option>
+                <option value="평범한">평범한</option>
+                <option value="통통한">통통한</option>
+                <option value="근육질">근육질</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="desired_smoking" class="form-label">흡연에 대해서</label>
+            <select th:field="*{desired_smoking}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="된다">된다</option>
+                <option value="안된다">안된다</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="desired_drinking" class="form-label">음주에 대해서</label>
+            <select th:field="*{desired_drinking}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="된다">된다</option>
+                <option value="안된다">안된다</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="desired_style" class="form-label">이상형 스타일</label>
+            <input type="text" th:field="*{desired_style}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="desired_religion" class="form-label">종교</label>
+            <select th:field="*{desired_religion}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="무교">무교</option>
+                <option value="불교">불교</option>
+                <option value="천주교">천주교</option>
+                <option value="기독교">기독교</option>
+                <option value="이슬람교">이슬람교</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="desired_mbti" class="form-label">원하는 MBTI</label>
+            <select th:field="*{desired_mbti}" class="form-control">
+                <option value="상관없음" selected>상관없음</option>
+                <option value="ISTJ">ISTJ</option>
+                <option value="ISFJ">ISFJ</option>
+                <option value="INFJ">INFJ</option>
+                <option value="INTJ">INTJ</option>
+                <option value="ISTP">ISTP</option>
+                <option value="ISFP">ISFP</option>
+                <option value="INFP">INFP</option>
+                <option value="INTP">INTP</option>
+                <option value="ESTP">ESTP</option>
+                <option value="ESFP">ESFP</option>
+                <option value="ENFP">ENFP</option>
+                <option value="ENTP">ENTP</option>
+                <option value="ESTJ">ESTJ</option>
+                <option value="ESFJ">ESFJ</option>
+                <option value="ENFJ">ENFJ</option>
+                <option value="ENTJ">ENTJ</option>
+            </select>
+        </div>
+        <input type="submit" value="수정하기" class="btn btn-primary my-2">
+    </form>
+</div>
+</body>
+</html>

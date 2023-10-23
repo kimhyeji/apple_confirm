@@ -1,0 +1,288 @@
+<html layout:decorate="~{/common/layout}">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title></title>
+
+</head>
+<div layout:fragment="content" class="container my-3">
+
+<div class="chat">
+
+    <div class="chat__message-box">
+
+        <ul class="chat__message-ul">
+
+        </ul>
+    </div>
+    <div class="chat-write-box">
+        <div class="chat-write-box-item  ">
+            <form class="chat__write-message flex" onsubmit="Chat__writeMessage(this); return false;">
+                <input type="hidden" name="roomId" th:value="${roomId}">
+
+                <input  class ="hidden"  type="text" placeholder="작성자" th:value="${user.nickname}"  name="authorName" autocomplete="off">
+                <input class="w-11/12  h-10" type="text" placeholder="내용을 입력해주세요." name="content" autocomplete="off">
+                <button class="w-20 chat-write-box-item-button"type="submit" value="작성">전송</button>
+            </form>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+    <br>
+    <br>
+    <br>
+    <div>
+        <form th:action="@{|/chat/${roomId}/delete|}" method="get">
+            <button type="submit" >채팅방 나가기 </button>
+
+
+        </form>
+
+    </div>
+
+
+
+
+</div>
+
+
+
+</html>
+
+<style>
+    body, ul, li{
+  margin:0;
+  list-style:none;
+  padding:0;
+}
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+    .chat{
+        display:block;
+        height:700px;
+        width:400px;
+
+        margin-left:auto;
+        margin-right:auto;
+         position:relative;
+    }
+    .chat__message-box{
+          height:95%;
+         width:400px;
+
+         overflow-y: scroll; /* 세로 스크롤만 활성화 */
+         overflow-x: hidden;
+         background-color :#9bbbd4;
+    }
+
+    .chat__message-box::-webkit-scrollbar {
+        	display:none /* Chrome , Safari , Opera */
+        }
+
+
+    .chat-write-box {
+
+
+        bottom:0%;
+        left:0;
+        width:100%;
+    }
+    .chat-write-box-item {
+        margin:10px 20px;
+    }
+
+    .chat-write-box-item-button {
+        background-color : #fef01b;
+        margin-left:10px;
+    }
+
+
+    .chat__message{
+        margin-bottom:30px;
+
+         max-width:230px;
+        border-radius:15px;
+        margin-top:20px;
+        padding:5px 15px;
+    }
+
+
+
+
+    .chat__message.right {
+    text-align: left;
+    background-color: #fef01b; /* 원하는 배경색으로 변경 */
+     clear:both;
+        float:right;
+        margin-right:10px;
+
+
+}
+
+/* 상대방의 메시지 */
+.chat__message.left {
+    text-align: left;
+    background-color: #ffffff; /* 원하는 배경색으로 변경 */
+    clear:both;
+    float:left;
+        margin-left:10px;
+
+
+
+}
+
+</style>
+
+<script th:inline="javascript">
+    const roomId = [[${roomId}]];
+
+    const userNickname = /*[[${user.nickname}]]*/ null;
+</script>
+
+
+
+<script>
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+
+   function fetchPost(url, data) {
+
+
+       return fetch(url, {
+           method: "POST",
+           headers: {
+               "Content-Type": "application/json",
+               "Accept": "application/json",
+                [header]: token
+           },
+           body: JSON.stringify(data),
+       })
+           .then(response => response.json())
+   }
+
+   function fetchGet(url, data) {
+
+
+       let query = Object.keys(data)
+           .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k]))
+           .join('&');
+
+
+       return fetch(url + "?" + query, {
+           method: "GET",
+           headers: {
+               "Content-Type": "application/json",
+               "Accept": "application/json"
+
+
+
+           }
+       })
+           .then(response => response.json())
+   }
+</script>
+
+<script>
+    // 채팅 메세지 작성 시작
+    function Chat__writeMessage(form) {
+        form.authorName.value = form.authorName.value.trim();
+
+        if (form.authorName.value.length == 0) {
+            alert("작성자를 입력해주세요.");
+            form.authorName.focus();
+
+            return;
+        }
+
+        form.content.value = form.content.value.trim();
+
+        if (form.content.value.length == 0) {
+            form.content.focus();
+
+            return;
+        }
+
+        fetchPost(`/chat/${roomId}/writeMessage`, {
+            authorName: form.authorName.value,
+            content: form.content.value
+        })
+            .then(console.log);
+
+        form.content.value = '';
+        form.content.focus();
+    }
+
+    // 채팅 메세지 작성 끝
+
+    // 채팅 메세지들 읽기 시작
+    // 현재 클라이언트가 받은 메세지 번호를 입력해야 합니다.
+    // 그래야 메세지 요청시에 필요한 부분만 가져오게 됩니다.
+    let Chat__lastLoadedId = 0;
+
+    function Chat__loadMore() {
+        fetchGet(`/chat/${roomId}/messages`, {
+            fromId: Chat__lastLoadedId
+        })
+            .then(body => {
+                Chat__drawMessages(body.data.messages);
+            });
+    }
+
+    const Chat__elMessageUl = document.querySelector('.chat__message-ul');
+
+    function Chat__drawMessages(messages) {
+        if (messages.length > 0) {
+            // 메세지를 그리기 전에 Chat__lastLoadedUuid 변수를 갱신합니다.
+            Chat__lastLoadedId = messages[messages.length - 1].id;
+        }
+
+        messages.forEach((message) => {
+              const isMyMessage = message.authorName === userNickname; // 자신의 메시지 여부 확인
+              console.log(userNickname);
+              const alignClass = isMyMessage ? 'right' : 'left'; // 오른쪽 또는 왼쪽 클래스 선택
+
+
+
+            Chat__elMessageUl
+                .insertAdjacentHTML(
+                    "beforeBegin",
+                    `<li class="chat__message ${alignClass}">${message.authorName} : ${message.content}</li>`
+                );
+
+
+        // 스크롤 컨테이너의 스크롤 위치를 가장 아래로 이동
+        const scrollContainer = document.querySelector(".chat__message-box"); // 스크롤 컨테이너의 선택자를 적절히 변경
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        });
+    }
+
+    Chat__loadMore();
+
+    // SSE 연결
+    // SSE는 단방향 무전기
+    // 방향 : 서버 -> 클라이언트
+    const sse = new EventSource(`/sse/connect/chatRoom__${roomId}`);
+
+    // 서버로부터 "chat__messageAdded" 라는 명령이 내려오면 Chat__loadMore 함수를 실행
+    sse.addEventListener('chat__messageAdded', e => {
+        Chat__loadMore();
+    });
+
+    // 채팅 메시지들 읽기 끝
+
+
+
+
+
+
+</script>

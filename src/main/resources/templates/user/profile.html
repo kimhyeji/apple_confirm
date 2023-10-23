@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Bootstrap CSS를 추가하세요 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+</head>
+
+<body>
+<h1>소개</h1>
+<div>
+    <img th:src="@{|${siteUser.filepath}|}" alt="User Image">
+</div>
+<div th:text="'나이 : ' + ${siteUser.age}"></div>
+<div th:text="'지역 : ' + ${siteUser.living}"></div>
+<div th:text="'취미 : ' + ${siteUser.hobby}"></div>
+<div th:text="'키 : ' + ${siteUser.tall}"></div>
+<div th:text="'체형 : ' + ${siteUser.body_type}"></div>
+<div th:text="'흡연 : ' + ${siteUser.smoking}"></div>
+<div th:text="'음주 : ' + ${siteUser.drinking}"></div>
+<div th:text="'성격 : ' + ${siteUser.style}"></div>
+<div th:text="'종교 : ' + ${siteUser.religion}"></div>
+<div th:text="'MBTI : ' + ${siteUser.mbti}"></div>
+<div th:text="'학교 : ' + ${siteUser.school}"></div>
+<div th:text="'직업 : ' + ${siteUser.job}"></div>
+<div th:text="'자기소개 : ' + ${siteUser.About_Me}"></div>
+<h2>원하는 이상형</h2>
+<div th:text="'선호하는 나이 : ' + ${siteUser.desired_age}"></div>
+<div th:text="'선호하는 지역 : ' + ${siteUser.desired_living}"></div>
+<div th:text="'선호하는 이상형 취미 : ' + ${siteUser.desired_hobby}"></div>
+<div th:text="'선호하는 이성 키 : ' + ${siteUser.desired_tall}"></div>
+<div th:text="'선호하는 이성 체형 : ' + ${siteUser.desired_body_type}"></div>
+<div th:text="'선호하는 이성 흡연 : ' + ${siteUser.desired_smoking}"></div>
+<div th:text="'선호하는 이성 음주 : ' + ${siteUser.desired_drinking}"></div>
+<div th:text="'선호하는 이성 성격 : ' + ${siteUser.desired_style}"></div>
+<div th:text="'선호하는 이성 종교 : ' + ${siteUser.desired_religion}"></div>
+<div th:text="'선호하는 이성 MBTI : ' + ${siteUser.desired_mbti}"></div>
+<a th:href="@{'/user/report/' + ${siteUser.id}}">신고하기</a>
+<button id="sendCyberMoneyBtn" class="btn btn-primary" data-toggle="modal" data-target="#cyberMoneyModal">사이버머니 보내기</button>
+    <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+       th:href="@{'/admin/punish/' + ${siteUser.id}}">제재하기</a>
+<!-- 모달 다이얼로그 -->
+<div class="modal fade" id="cyberMoneyModal" tabindex="-1" role="dialog" aria-labelledby="cyberMoneyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cyberMoneyModalLabel">사이버머니 보내기</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>금액을 입력해주세요:</p>
+                <input type="number" id="cyberMoneyAmount" class="form-control" required>
+
+                <p>받는사람:</p>
+                <!-- 여기에서 현재 프로필 사용자의 username 표시 -->
+                <input type="text" id="recipientUsername" class="form-control" required placeholder="받는 사용자의 이름" readonly>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="sendCyberMoneyConfirmBtn">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS 및 jQuery 스크립트를 추가하세요 -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script>
+    document.getElementById('sendCyberMoneyBtn').addEventListener('click', function() {
+    // 사용자의 username을 HTML에서 가져옵니다.
+    var siteUserUsernameElement = document.querySelector(".user-username");
+
+    if (siteUserUsernameElement) {
+        var siteUserUsername = siteUserUsernameElement.textContent;
+
+        // "recipientUsername" 입력 필드의 값을 사용자의 username으로 설정합니다.
+        document.getElementById('recipientUsername').value = siteUserUsername;
+
+        $('#cyberMoneyModal').modal('show'); // 모달을 열 때
+
+        document.getElementById('sendCyberMoneyConfirmBtn').addEventListener('click', function() {
+            var amount = document.getElementById('cyberMoneyAmount').value;
+            var recipientUsername = document.getElementById('recipientUsername').value; // 변경된 부분
+
+            var csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+            var csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+
+            if (recipientUsername) { // 유효한 사용자 이름을 입력했는지 확인
+                if (amount >= 0) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/api/cybermoney/send', true);
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                $('#cyberMoneyModal').modal('hide'); // 성공 시 모달을 닫음
+                                alert('사이버 머니 전송이 성공했습니다.');
+                                // 사이버 머니 갱신 등의 추가 작업 수행
+                            } else {
+                                if (xhr.status === 400) {
+                                    alert('사이버 머니 전송에 실패했습니다. 요청이 잘못되었습니다.');
+                                } else if (xhr.status === 403) {
+                                    alert('사이버 머니 전송에 실패했습니다. 권한이 없습니다.');
+                                } else {
+                                    console.log(xhr.status);
+                                    alert('사이버 머니 전송에 실패했습니다. 서버 오류가 발생했습니다.');
+                                }
+                            }
+                        }
+                    };
+
+                    // 요청 본문 데이터
+                    var data = 'recipientUsername=' + recipientUsername + '&amount=' + amount;
+
+                    xhr.send(data);
+                } else {
+                    alert('금액은 0 이상이어야 합니다.');
+                }
+            } else {
+                alert('받는 사용자의 이름을 입력해주세요.');
+            }
+        });
+    } else {
+        console.error("사용자의 username 요소를 찾을 수 없습니다.");
+    }
+});
+
+</script>
+
+</body>
+</html>

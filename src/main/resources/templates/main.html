@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/common/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content" class="container my-3">
+
+
+    <div th:if="${siteUsers != null}" th:each="user : ${siteUsers}">
+        <div class="flex  ">
+        <div><a  th:value="${user.id}"  name="userId" th:text="${user.nickname}"></a></div>
+        <div>
+            <form method="post"  th:action="@{|/chat/${chatRoom != null ? chatRoom.id+1 : 1}/room?userId2=${user.id}|}">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <button type="submit" >님과 채팅방 만들기 </button>
+            </form>
+        </div>
+          </div>
+
+    </div>
+
+
+
+
+
+
+    <table th:if="${#authorization.expression('isAuthenticated()')}">
+    <thead>
+    <tr>
+        <th>사진</th>
+        <th>닉네임</th>
+        <th>지역</th>
+        <th>나이</th>
+        <th>간단 자기소개</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="userList : ${userList}">
+        <td>
+            <a th:href="@{|/user/detail/${userList.id}|}">
+                <img th:src="@{|${userList.filepath}|}" alt="User Image">
+            </a>
+        </td>
+        <td th:text="${userList.nickname}"></td>
+        <td th:text="${userList.living}"></td>
+        <td th:text="${userList.age}"></td>
+        <td th:text="${userList.About_Me}"></td>
+
+    </tr>
+    </tbody>
+    </table>
+</div>
+
+
+<div th:value="${chatRoom.id}"></div>
+
+
+</body>
+</html>
+
+<script >
+
+    $(document).ready(function () {
+      $("#myLink").click(function () {
+          var valueToSend = "exampleValue"; // 보낼 값
+          var url = "/chat/"+roomId+"?paramName=" + valueToSend;
+
+          $.get(url, function (data) {
+              // 서버 응답을 처리
+              console.log(data);
+          });
+      });
+  });
+
+
+
+</script>

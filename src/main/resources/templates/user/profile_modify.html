@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<div layout:fragment="content" class="container my-3">
+    <div>
+        <h4>프로필 수정</h4>
+    </div>
+    <form th:action="@{/user/profile_modify}" th:object="${userAddForm}" method="post">
+        <div class="mb-3">
+            <label for="age" class="form-label">나이</label>
+            <input type="text" th:field="*{age}" class="form-control" pattern="^[2-9]\d*$">
+            <span>(숫자만 입력해주세요.)</span>
+        </div>
+        <div class="mb-3">
+            <label for="living" class="form-label">지역</label>
+            <select th:field="*{living}" class="form-control">
+                <option value="서울">서울</option>
+                <option value="인천">인천</option>
+                <option value="경기">경기</option>
+                <option value="대전">대전</option>
+                <option value="대구">대구</option>
+                <option value="부산">부산</option>
+                <option value="강원">강원</option>
+                <option value="광주">광주</option>
+                <option value="울산">울산</option>
+                <option value="경남">경남</option>
+                <option value="경북">경북</option>
+                <option value="전남">전남</option>
+                <option value="전북">전북</option>
+                <option value="제주">제주</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="hobby" class="form-label">취미</label>
+            <input type="text" th:field="*{hobby}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="tall" class="form-label">키</label>
+            <input type="text" th:field="*{tall}" class="form-control" pattern="[0-9]*">
+            <span>(숫자만 입력해주세요.)</span>
+        </div>
+        <div class="mb-3">
+            <label for="body_type" class="form-label">체형</label>
+            <select th:field="*{body_type}" class="form-control">
+                <option value="슬림한">슬림한</option>
+                <option value="평범한">평범한</option>
+                <option value="통통한">통통한</option>
+                <option value="근육질">근육질</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="smoking" class="form-label">흡연 유무</label>
+            <input type="checkbox" th:field="*{smoking}" class="form-check-input">
+            <span>(흡연자라면 체크해 주세요.)</span>
+        </div>
+        <div class="mb-3">
+            <label for="drinking" class="form-label">음주</label>
+            <select th:field="*{drinking}" class="form-control">
+                <option value="안마심">안마심</option>
+                <option value="가끔">가끔</option>
+                <option value="자주">자주</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="style" class="form-label">스타일</label>
+            <input type="text" th:field="*{style}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="religion" class="form-label">종교</label>
+            <select th:field="*{religion}" class="form-control">
+                <option value="무교">무교</option>
+                <option value="불교">불교</option>
+                <option value="천주교">천주교</option>
+                <option value="기독교">기독교</option>
+                <option value="이슬람교">이슬람교</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="mbti" class="form-label">MBTI</label>
+            <select th:field="*{mbti}" class="form-control">
+                <option value="" selected></option>
+                <option value="ISTJ">ISTJ</option>
+                <option value="ISFJ">ISFJ</option>
+                <option value="INFJ">INFJ</option>
+                <option value="INTJ">INTJ</option>
+                <option value="ISTP">ISTP</option>
+                <option value="ISFP">ISFP</option>
+                <option value="INFP">INFP</option>
+                <option value="INTP">INTP</option>
+                <option value="ESTP">ESTP</option>
+                <option value="ESFP">ESFP</option>
+                <option value="ENFP">ENFP</option>
+                <option value="ENTP">ENTP</option>
+                <option value="ESTJ">ESTJ</option>
+                <option value="ESFJ">ESFJ</option>
+                <option value="ENFJ">ENFJ</option>
+                <option value="ENTJ">ENTJ</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="school" class="form-label">학력</label>
+            <select th:field="*{school}" class="form-control">
+                <option value="" selected></option>
+                <option value="고교 졸업 이하">고교 졸업 이하</option>
+                <option value="고등학교 졸업">고등학교 졸업</option>
+                <option value="대학 졸업(2,3년제)">대학 졸업(2,3년제)</option>
+                <option value="대학교 졸업(4년제)">대학교 졸업(4년제)</option>
+                <option value="대학원 석사 졸업">대학원 석사 졸업</option>
+                <option value="대학원 빅사 졸업">대학원 박사 졸업</option>
+                <option value="박사 졸업 이상">박사 졸업 이상</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="job" class="form-label">직장</label>
+            <select th:field="*{job}" class="form-control">
+                <option value="" selected></option>
+                <option value="공무원">공무원</option>
+                <option value="군인">학생</option>
+                <option value="군인">군인</option>
+                <option value="무직">무직</option>
+                <option value="준비중">준비중</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="About_Me" class="form-label">자기소개</label>
+            <input type="text" th:field="*{About_Me}" class="form-control">
+        </div>
+        <input type="submit" value="수정하기" class="btn btn-primary my-2">
+    </form>
+</div>
+
+
+</body>
+</html>

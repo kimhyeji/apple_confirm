@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{'/user/report/' + ${userId}}" th:object="${reportForm}" method="post">
+
+    <div class="mb-3">
+        <label for="subject" class="form-label">제목</label>
+        <input type="text" name="subject" id="subject" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">내용</label>
+        <textarea name="content" id="content" class="form-control" rows="10"></textarea>
+    </div>
+    <input type="submit" value="신고하기" class="btn btn-primary my-2">
+</form>
+</body>
+</html>
